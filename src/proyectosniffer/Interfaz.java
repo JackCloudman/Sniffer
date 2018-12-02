@@ -119,7 +119,6 @@ public class Interfaz extends javax.swing.JFrame {
 
         jButtonLimpiar.setBackground(new java.awt.Color(51, 51, 51));
         jButtonLimpiar.setFont(new java.awt.Font("Consolas", 1, 18)); // NOI18N
-        jButtonLimpiar.setForeground(new java.awt.Color(51, 51, 51));
         jButtonLimpiar.setText("Limpiar salida");
         jButtonLimpiar.setActionCommand("Empezar");
         jButtonLimpiar.setBorder(null);
@@ -131,7 +130,6 @@ public class Interfaz extends javax.swing.JFrame {
         getContentPane().add(jButtonLimpiar, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 560, 200, 30));
 
         jLabel4.setFont(new java.awt.Font("Consolas", 1, 18)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(51, 51, 51));
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel4.setText("Información de la trama:");
         jLabel4.setToolTipText("");
@@ -139,7 +137,6 @@ public class Interfaz extends javax.swing.JFrame {
 
         jButtonAbrir.setBackground(new java.awt.Color(51, 51, 51));
         jButtonAbrir.setFont(new java.awt.Font("Consolas", 1, 18)); // NOI18N
-        jButtonAbrir.setForeground(new java.awt.Color(51, 51, 51));
         jButtonAbrir.setBorder(null);
         jButtonAbrir.setLabel("Abrir archivo");
         jButtonAbrir.addActionListener(new java.awt.event.ActionListener() {
@@ -161,22 +158,18 @@ public class Interfaz extends javax.swing.JFrame {
         getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1060, 0, 30, 20));
 
         jLabelInterfaz.setFont(new java.awt.Font("Consolas", 1, 18)); // NOI18N
-        jLabelInterfaz.setForeground(new java.awt.Color(51, 51, 51));
         jLabelInterfaz.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabelInterfaz.setText("Seleccione una interfaz de red:");
         getContentPane().add(jLabelInterfaz, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 130, 320, 30));
 
         jLabel2.setFont(new java.awt.Font("Consolas", 1, 36)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(51, 51, 51));
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("Analizador de paquetes");
         getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 60, 580, 30));
 
         jComboBoxInterfaz.setBackground(new java.awt.Color(51, 51, 51));
         jComboBoxInterfaz.setFont(new java.awt.Font("Consolas", 1, 18)); // NOI18N
-        jComboBoxInterfaz.setForeground(new java.awt.Color(51, 51, 51));
         jComboBoxInterfaz.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione un dispositivo" }));
-        jComboBoxInterfaz.setBorder(null);
         jComboBoxInterfaz.setOpaque(false);
         jComboBoxInterfaz.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -186,7 +179,6 @@ public class Interfaz extends javax.swing.JFrame {
         getContentPane().add(jComboBoxInterfaz, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 170, 310, -1));
 
         jLabel3.setFont(new java.awt.Font("Consolas", 1, 18)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(51, 51, 51));
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel3.setText("Modo de captura de paquetes:");
         jLabel3.setToolTipText("");
@@ -194,7 +186,6 @@ public class Interfaz extends javax.swing.JFrame {
 
         jComboBoxTipoCaptura.setBackground(new java.awt.Color(51, 51, 51));
         jComboBoxTipoCaptura.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
-        jComboBoxTipoCaptura.setForeground(new java.awt.Color(51, 51, 51));
         jComboBoxTipoCaptura.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "-Seleccione una opción-", "Al vuelo", "Desde un archivo" }));
         jComboBoxTipoCaptura.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -231,7 +222,6 @@ public class Interfaz extends javax.swing.JFrame {
 
         jButtonEmpezar.setBackground(new java.awt.Color(51, 51, 51));
         jButtonEmpezar.setFont(new java.awt.Font("Consolas", 1, 18)); // NOI18N
-        jButtonEmpezar.setForeground(new java.awt.Color(51, 51, 51));
         jButtonEmpezar.setText("Empezar a capturar");
         jButtonEmpezar.setActionCommand("Empezar");
         jButtonEmpezar.setBorder(null);
@@ -244,7 +234,6 @@ public class Interfaz extends javax.swing.JFrame {
 
         jButtonGuardar.setBackground(new java.awt.Color(51, 51, 51));
         jButtonGuardar.setFont(new java.awt.Font("Consolas", 1, 18)); // NOI18N
-        jButtonGuardar.setForeground(new java.awt.Color(51, 51, 51));
         jButtonGuardar.setText("Guardar captura");
         jButtonGuardar.setBorder(null);
         jButtonGuardar.addActionListener(new java.awt.event.ActionListener() {
@@ -256,7 +245,6 @@ public class Interfaz extends javax.swing.JFrame {
 
         jButtonInfo.setBackground(new java.awt.Color(51, 51, 51));
         jButtonInfo.setFont(new java.awt.Font("Consolas", 1, 18)); // NOI18N
-        jButtonInfo.setForeground(new java.awt.Color(51, 51, 51));
         jButtonInfo.setText("Más información");
         jButtonInfo.setBorder(null);
         jButtonInfo.addActionListener(new java.awt.event.ActionListener() {
@@ -268,7 +256,6 @@ public class Interfaz extends javax.swing.JFrame {
 
         jButtonPausar.setBackground(new java.awt.Color(51, 51, 51));
         jButtonPausar.setFont(new java.awt.Font("Consolas", 1, 18)); // NOI18N
-        jButtonPausar.setForeground(new java.awt.Color(51, 51, 51));
         jButtonPausar.setText("Parar captura");
         jButtonPausar.setBorder(null);
         jButtonPausar.addActionListener(new java.awt.event.ActionListener() {
