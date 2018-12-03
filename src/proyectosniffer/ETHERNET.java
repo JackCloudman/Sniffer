@@ -6,20 +6,25 @@
 package proyectosniffer;
 
 import org.jnetpcap.packet.PcapPacket;
-import org.jnetpcap.protocol.network.Ip4;
 
 /**
  *
  * @author root
  */
-public class IPV4{
+public class ETHERNET extends Trama{
     
-    public IPV4(PcapPacket p) {
-        Ip4 ip = new Ip4();
+    public ETHERNET(PcapPacket p) {
+        super(p);
+        if(super.tipo==2054){
+            System.out.println("Procolo ARP");
+        }
+        else if(super.tipo == 2048){
+            System.out.println("Protocolo IPV4");
+        }
     }
     @Override
     public String toString() {
-        return "IPV4";
+        return "Trama ethernet";
     }
     
 }

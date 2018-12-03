@@ -23,6 +23,7 @@ import org.jnetpcap.packet.JPacket;
 import org.jnetpcap.packet.PcapPacket;
 import org.jnetpcap.packet.PcapPacketHandler;
 import static org.jnetpcap.packet.format.FormatUtils.asString;
+import org.jnetpcap.protocol.lan.Ethernet;
 import org.jnetpcap.util.PcapPacketArrayList;
 
 
@@ -448,6 +449,9 @@ public class Interfaz extends javax.swing.JFrame {
             data_table[3] = "Ethernet";
             ethernet++;
         } else {
+            Ethernet eth = new Ethernet();
+            if (packet.hasHeader(eth)){
+            }
             data_table[3] = "IEEE";
             ieee++;
         }

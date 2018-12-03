@@ -14,8 +14,10 @@ public abstract class Trama {
     String hash;
     PcapPacket paquete;
     byte []macO,macD;
+    int tipo;
     public Trama(PcapPacket p){
         paquete = p;
+        tipo = (p.getUByte(12) * 256) + (p.getUByte(13));
         fecha_creacion = new Date();
         macD = p.getByteArray(0, 6);
         macO = p.getByteArray(6, 6);

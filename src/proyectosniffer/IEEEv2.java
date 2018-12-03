@@ -6,20 +6,16 @@
 package proyectosniffer;
 
 import org.jnetpcap.packet.PcapPacket;
-import org.jnetpcap.protocol.network.Ip4;
 
-/**
- *
- * @author root
- */
-public class IPV4{
-    
-    public IPV4(PcapPacket p) {
-        Ip4 ip = new Ip4();
+public class IEEEv2 extends Trama{
+
+    public IEEEv2(PcapPacket p) {
+        super(p);
+        
     }
     @Override
     public String toString() {
-        return "IPV4";
+        return "TRAMA IEEE";
     }
     
 }

@@ -24,6 +24,7 @@ import org.jnetpcap.packet.JPacket;
 import org.jnetpcap.packet.PcapPacket;
 import org.jnetpcap.packet.PcapPacketHandler;
 import static org.jnetpcap.packet.format.FormatUtils.asString;
+import org.jnetpcap.protocol.lan.Ethernet;
 import org.jnetpcap.util.PcapPacketArrayList;
 
 public class jnetpcaphelper{
@@ -43,7 +44,7 @@ public class jnetpcaphelper{
     int flags = Pcap.MODE_PROMISCUOUS;
     int snaplen = 64 * 1024;
     int timeout = 1 * 1000;
-    private IPV4 t;
+    private Trama t;
     public jnetpcaphelper(){
     
     }
@@ -79,7 +80,16 @@ public class jnetpcaphelper{
                     packet.getCaptureHeader().wirelen(), // Original length
                     user // User supplied object
             );
-            this.t = new IPV4(packet);
+            int tipo = (packet.getUByte(12) * 256) + (packet.getUByte(13));
+            if(tipo<1500){
+                this.t = new IEEEv2(packet);
+            }
+            else{
+                Ethernet eth = new Ethernet();
+                if(packet.hasHeader(eth)){
+                    this.t = new ETHERNET(packet);
+                }
+            }
         };
         pcap.loop(1, jpacketHandler,"");
         return t;
