@@ -52,6 +52,7 @@ public class Main extends javax.swing.JFrame implements MouseListener,Runnable {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        informacion.setEditable(false);
         informacion.setColumns(20);
         informacion.setRows(5);
         jScrollPane2.setViewportView(informacion);
@@ -278,7 +279,6 @@ public class Main extends javax.swing.JFrame implements MouseListener,Runnable {
             Trama t = helper.scan(opcion);
             if(t!=null){
             tramas.add(t);
-            System.out.println(t.toString());
             DefaultTableModel model = (DefaultTableModel) jt.getModel();
             Format formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String fecha =  formatter.format(t.getDate());

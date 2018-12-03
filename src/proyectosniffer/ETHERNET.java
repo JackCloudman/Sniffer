@@ -6,6 +6,7 @@
 package proyectosniffer;
 
 import org.jnetpcap.packet.PcapPacket;
+import org.jnetpcap.protocol.network.Arp;
 import org.jnetpcap.protocol.network.Icmp;
 import org.jnetpcap.protocol.network.Ip4;
 import org.jnetpcap.protocol.tcpip.Tcp;
@@ -17,12 +18,14 @@ import org.jnetpcap.protocol.tcpip.Udp;
  */
 public class ETHERNET extends Trama{
     Ip4 ip=null;
+    Arp arp= null;
     String informacion;
-    
+                                       
     public ETHERNET(PcapPacket p) {
         super(p);
         if(super.tipo==2054){
             System.out.println("Procolo ARP");
+            arp = new Arp();
         }
         else if(super.tipo == 2048){
             System.out.println("Protocolo IPV4");
@@ -32,9 +35,9 @@ public class ETHERNET extends Trama{
         informacion = getInformacion();
     }
     protected String getInformacion() {
-        String s;
+        String s = "";
         if(ip!=null){
-            s = "Version ip: "+ip.version()+
+            s = "== IPv4 ==\nVersion ip: "+ip.version()+
             "\nLongitud del encabezado: "+ip.hlen()+
             "\nTipo de servicio: "+ip.tos()+
             "\nIdentificador: "+ip.id()+
@@ -136,6 +139,94 @@ public class ETHERNET extends Trama{
             }
             return s;
             
+        }
+        if(arp!=null){
+            if(this.paquete.hasHeader(arp)){
+            s = s+" ==ARP==\n"+
+            "Tipo direcc de Hware: "+arp.hardwareType()+
+            "\nTipo direcc de protocolo: "+arp.protocolType()+"\n";
+            int TipDHw=arp.hlen();
+            String TipoDHW="";
+            switch(TipDHw){
+                case (1):
+                    TipoDHW="ETHERNET";
+                break;
+                case (6):
+                    TipoDHW="IEEE 802";
+                    break;
+                case (7):
+                    TipoDHW="ARCNET";
+                break;
+                case (15):
+                    TipoDHW="FRAME RELAY";
+                break;
+                case (16):
+                    TipoDHW="ATM";
+                break;
+                    case (17):
+                    TipoDHW="HDLC";
+                break;
+                case (18):
+                    TipoDHW="FIBER CHANNEL";
+                break;
+                case (20):
+                    TipoDHW="SERIAL LINE";
+                break;   
+                                             
+            }
+            s = s+"Longitud de direcc de Hware: "+TipoDHW+
+            "\nLongitud de direcc de Protocolo: "+arp.plen();
+            switch(arp.operation()){
+                case(1):
+                    s = s+"\nOperacion: ARP REQUEST";
+                break;
+                case(2):
+                        s = s+"\nOperacion: ARP REPLY";
+                break;
+                case(3):
+                    s = s+"\nOperacion: RARP REQUEST";
+                break;
+                case(4):
+                    s = s+"\nOperacion: RARP REPLY";
+                break;
+            }
+            byte []sha = arp.sha();
+            s = s+"SHA: ";
+            for(int j=0; j<sha.length; j++){
+                s = s+String.format("%02X",sha[j]);
+                if(j<3)
+                   s = s+":";
+            }
+            s = s+"\nSPA: ";
+            byte[] spa = arp.spa();
+            for(int j=0; j<spa.length; j++){
+                if(spa[j]<0)
+                    s = s+String.format("%d",(spa[j]+256));
+                else
+                    s = s+String.format("%d",spa[j]);
+                if(j<3)
+                   s = s+".";
+                }  
+            byte[] tha = arp.tha();
+            s = s+"\nTHA: ";
+            for(int j=0; j<tha.length; j++){
+                s = s+String.format("%02X",tha[j]);
+                if(j<3)
+                    s = s+":";
+                }
+                System.out.println("\nTPA: ");
+                byte []tpa = arp.tpa();
+                for(int j=0; j<tpa.length; j++){
+                    if(tpa[j]<0)
+                        String.format("%d",(tpa[j]+256));
+                    else
+                            String.format("%d",tpa[j]);
+                    if(j<3)
+                        s = s+".";
+                }
+            return s;
+            }
+        
         }
         return "Trama ethernet";
     }
