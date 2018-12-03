@@ -86,8 +86,10 @@ public class jnetpcaphelper{
             }
             else{
                 Ethernet eth = new Ethernet();
-                if(packet.hasHeader(eth)){
+                if(packet.hasHeader(eth)&&(tipo==2048||tipo==2054)){
                     this.t = new ETHERNET(packet);
+                }else{
+                this.t = null;
                 }
             }
         };

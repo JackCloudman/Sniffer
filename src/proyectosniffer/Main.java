@@ -275,12 +275,14 @@ public class Main extends javax.swing.JFrame implements MouseListener,Runnable {
         while(running){
             System.out.println("Running...");
             Trama t = helper.scan(opcion);
+            if(t!=null){
             tramas.add(t);
             System.out.println(t.toString());
             DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
             Format formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String fecha =  formatter.format(t.getDate());
-                model.addRow(new Object[]{t.hash, fecha,t.getMacO(),t.getMacD(),t.tipo+""});
+            model.addRow(new Object[]{t.hash, fecha,t.getMacO(),t.getMacD(),t.tipo+""});
+            }
             try{
                 Thread.sleep(1);
             }catch(Exception e){}
