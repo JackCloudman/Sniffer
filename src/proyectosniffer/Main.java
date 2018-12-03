@@ -27,6 +27,7 @@ public class Main extends javax.swing.JFrame implements MouseListener,Runnable {
         interfaces.setVisible(false);
         helper = new jnetpcaphelper(); 
         play.setEnabled(false);
+        jt.addMouseListener(this);
     }
 
     /**
@@ -39,7 +40,7 @@ public class Main extends javax.swing.JFrame implements MouseListener,Runnable {
     private void initComponents() {
 
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        informacion = new javax.swing.JTextArea();
         play = new javax.swing.JButton();
         importar = new javax.swing.JButton();
         exportar = new javax.swing.JButton();
@@ -47,13 +48,13 @@ public class Main extends javax.swing.JFrame implements MouseListener,Runnable {
         interfaces = new javax.swing.JComboBox<>();
         alvuelo = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jt = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane2.setViewportView(jTextArea1);
+        informacion.setColumns(20);
+        informacion.setRows(5);
+        jScrollPane2.setViewportView(informacion);
 
         play.setText("START");
         play.addActionListener(new java.awt.event.ActionListener() {
@@ -82,7 +83,7 @@ public class Main extends javax.swing.JFrame implements MouseListener,Runnable {
             }
         });
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jt.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -98,7 +99,7 @@ public class Main extends javax.swing.JFrame implements MouseListener,Runnable {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(jt);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -237,37 +238,37 @@ public class Main extends javax.swing.JFrame implements MouseListener,Runnable {
     private javax.swing.JButton estadisticas;
     private javax.swing.JButton exportar;
     private javax.swing.JButton importar;
+    private javax.swing.JTextArea informacion;
     private javax.swing.JComboBox<String> interfaces;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTable jt;
     private javax.swing.JButton play;
     // End of variables declaration//GEN-END:variables
 
     @Override
     public void mouseClicked(MouseEvent me) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        informacion.setText(tramas.get(jt.getSelectedRow()).toString());
     }
 
     @Override
     public void mousePressed(MouseEvent me) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
     }
 
     @Override
     public void mouseReleased(MouseEvent me) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
     }
 
     @Override
     public void mouseEntered(MouseEvent me) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+       
     }
 
     @Override
     public void mouseExited(MouseEvent me) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
     }
 
     @Override
@@ -278,7 +279,7 @@ public class Main extends javax.swing.JFrame implements MouseListener,Runnable {
             if(t!=null){
             tramas.add(t);
             System.out.println(t.toString());
-            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+            DefaultTableModel model = (DefaultTableModel) jt.getModel();
             Format formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String fecha =  formatter.format(t.getDate());
             model.addRow(new Object[]{t.hash, fecha,t.getMacO(),t.getMacD(),t.tipo+""});
