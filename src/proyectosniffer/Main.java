@@ -7,19 +7,26 @@ package proyectosniffer;
 
 import java.awt.event.*;
 import java.io.File;
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
-public class Main extends javax.swing.JFrame implements MouseListener,ActionListener {
+public class Main extends javax.swing.JFrame implements MouseListener,Runnable {
 
     jnetpcaphelper helper = null;
+    boolean al_vuelo = false;
+    int opcion = -1;
+    boolean running = false;
+    Thread t;
+    ArrayList<Trama> tramas = new ArrayList<Trama>();
     public Main() {
         initComponents();
-        play.addActionListener(this);
-        alvuelo.addActionListener(this);
         interfaces.setVisible(false);
         helper = new jnetpcaphelper(); 
+        play.setEnabled(false);
     }
 
     /**
@@ -33,15 +40,14 @@ public class Main extends javax.swing.JFrame implements MouseListener,ActionList
 
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
         play = new javax.swing.JButton();
         importar = new javax.swing.JButton();
         exportar = new javax.swing.JButton();
         estadisticas = new javax.swing.JButton();
         interfaces = new javax.swing.JComboBox<>();
         alvuelo = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -49,30 +55,7 @@ public class Main extends javax.swing.JFrame implements MouseListener,ActionList
         jTextArea1.setRows(5);
         jScrollPane2.setViewportView(jTextArea1);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "HASH", "MAC ORIGEN", "MAC DESTINO", "TIPO"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jScrollPane1.setViewportView(jTable1);
-
-        jScrollPane3.setViewportView(jScrollPane1);
-
-        play.setText("PLAY/STOP");
+        play.setText("START");
         play.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 playActionPerformed(evt);
@@ -99,6 +82,24 @@ public class Main extends javax.swing.JFrame implements MouseListener,ActionList
             }
         });
 
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "HASH", "FECHA", "MAC ORIGEN", "MAC DESTINO", "TIPO"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(jTable1);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -107,7 +108,7 @@ public class Main extends javax.swing.JFrame implements MouseListener,ActionList
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jScrollPane3))
+                        .addComponent(jScrollPane2))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(26, 26, 26)
                         .addComponent(play)
@@ -123,8 +124,8 @@ public class Main extends javax.swing.JFrame implements MouseListener,ActionList
                         .addComponent(interfaces, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(293, 293, 293)
-                        .addComponent(jScrollPane2)))
+                        .addContainerGap()
+                        .addComponent(jScrollPane1)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -138,26 +139,62 @@ public class Main extends javax.swing.JFrame implements MouseListener,ActionList
                     .addComponent(estadisticas)
                     .addComponent(interfaces, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(alvuelo))
-                .addGap(9, 9, 9)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void playActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_playActionPerformed
-        // TODO add your handling code here:
+
+        if(opcion<-1)
+            return;
+        if(running){
+            running = false;
+            play.setText("START");
+            
+            interfaces.setEnabled(true);
+            alvuelo.setEnabled(true);
+            exportar.setEnabled(true);
+        }else{
+            running = true;
+            interfaces.setEnabled(false);
+            alvuelo.setEnabled(false);
+            exportar.setEnabled(false);
+            t = new Thread(this);
+            t.start();
+            play.setText("STOP");
+        }
     }//GEN-LAST:event_playActionPerformed
 
     private void interfacesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_interfacesActionPerformed
-        // TODO add your handling code here:
+        int index = interfaces.getSelectedIndex();
+        opcion = index;
     }//GEN-LAST:event_interfacesActionPerformed
 
     private void alvueloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_alvueloActionPerformed
-        // TODO add your handling code here:
+            if(!al_vuelo){
+                
+            interfaces.removeAllItems();
+            ArrayList<String> devices = helper.searchInterfaces();
+            for(String d:devices){
+                interfaces.addItem(d);
+            }
+            interfaces.setVisible(true);
+            al_vuelo = true;
+            importar.setEnabled(false);
+            play.setEnabled(true);
+            }else{
+            interfaces.setVisible(false);
+            al_vuelo = false;
+            importar.setEnabled(true);
+            play.setEnabled(false);
+            }
+        
     }//GEN-LAST:event_alvueloActionPerformed
 
     /**
@@ -203,7 +240,6 @@ public class Main extends javax.swing.JFrame implements MouseListener,ActionList
     private javax.swing.JComboBox<String> interfaces;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JButton play;
@@ -235,17 +271,18 @@ public class Main extends javax.swing.JFrame implements MouseListener,ActionList
     }
 
     @Override
-    public void actionPerformed(ActionEvent ae) {
-        JButton btn = (JButton)ae.getSource();
-        if(btn == play){
-            System.out.println("play");
-        }
-        else if(btn == alvuelo){
-            ArrayList<String> devices = helper.searchInterfaces();
-            for(String d:devices){
-                interfaces.addItem(d);
-            }
-            interfaces.setVisible(true);
+    public void run() {
+        while(running){
+            System.out.println("Running...");
+            Trama t = helper.scan(opcion);
+            tramas.add(t);
+            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+            Format formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String fecha =  formatter.format(t.getDate());
+                model.addRow(new Object[]{t.hash, fecha,t.getMacO(),t.getMacD(),"---"});
+            try{
+                Thread.sleep(1);
+            }catch(Exception e){}
         }
     }
 }

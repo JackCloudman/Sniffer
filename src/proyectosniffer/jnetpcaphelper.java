@@ -9,6 +9,7 @@ package proyectosniffer;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,7 +26,7 @@ import org.jnetpcap.packet.PcapPacketHandler;
 import static org.jnetpcap.packet.format.FormatUtils.asString;
 import org.jnetpcap.util.PcapPacketArrayList;
 
-public class jnetpcaphelper {
+public class jnetpcaphelper{
     PcapPacketArrayList packetsOffline;
     PcapPacketArrayList packetsOnline;
     StringBuilder errbuf = new StringBuilder(); // For any error msgs 
@@ -41,12 +42,14 @@ public class jnetpcaphelper {
     
     int flags = Pcap.MODE_PROMISCUOUS;
     int snaplen = 64 * 1024;
-    int timeout = 10 * 1000;
+    int timeout = 1 * 1000;
+    private IPV4 t;
     public jnetpcaphelper(){
     
     }
     public ArrayList<String>searchInterfaces(){
     ArrayList<String> listaInterfaces= new ArrayList<String>();
+    alldevs.removeAll(alldevs);
     int r = Pcap.findAllDevs(alldevs,errbuf);
     for (PcapIf device : alldevs) {
         String descripcion =
@@ -61,5 +64,24 @@ public class jnetpcaphelper {
                     listaInterfaces.add(descripcion+" MAC: "+dir_mac);
 		}
     return listaInterfaces;
+    }
+    public Trama scan(int index){
+        device = alldevs.get(index);
+        pcap = Pcap.openLive(device.getName(), snaplen, flags, timeout, errbuf);
+        if (pcap == null) {
+            System.err.printf("No se pudo abrir la interfaz!");
+            return null;
+        }
+       PcapPacketHandler<String> jpacketHandler = (PcapPacket packet, String user) -> {
+            System.out.printf("Received packet at %s caplen=%-4d len=%-4d %s\n",
+                    new Date(packet.getCaptureHeader().timestampInMillis()),
+                    packet.getCaptureHeader().caplen(), // Length actually captured
+                    packet.getCaptureHeader().wirelen(), // Original length
+                    user // User supplied object
+            );
+            this.t = new IPV4(packet);
+        };
+        pcap.loop(1, jpacketHandler,"");
+        return t;
     }
 }
