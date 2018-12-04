@@ -223,16 +223,14 @@ public class Main extends javax.swing.JFrame implements MouseListener,Runnable {
 
             try {
                 JFileChooser f = new JFileChooser();
-            f.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY); 
-            f.showSaveDialog(null);
+            f.showSaveDialog(this);
 
             //System.out.println(f.getCurrentDirectory());
             System.out.println(f.getSelectedFile());
-            String path= f.getSelectedFile().toString();
-            File file =new File(path + "\\export.txt");
+            File file =f.getSelectedFile();
             List ether = new ArrayList();
 
-                 FileWriter fw = new FileWriter(file);
+                 FileWriter fw = new FileWriter(file + ".cap");
                  BufferedWriter bw = new BufferedWriter(fw);
                  for(int i = 0; i < jt.getRowCount(); i++){
                      for(int j=0; j < jt.getColumnCount(); j++){
