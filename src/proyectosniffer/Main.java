@@ -6,13 +6,23 @@
 package proyectosniffer;
 
 import java.awt.event.*;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartFrame;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PiePlot;
+import org.jfree.data.general.DefaultPieDataset;
 
 public class Main extends javax.swing.JFrame implements MouseListener,Runnable {
 
@@ -67,8 +77,18 @@ public class Main extends javax.swing.JFrame implements MouseListener,Runnable {
         importar.setText("Importar");
 
         exportar.setText("Exportar");
+        exportar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exportarActionPerformed(evt);
+            }
+        });
 
         estadisticas.setText("Estadisticas");
+        estadisticas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                estadisticasActionPerformed(evt);
+            }
+        });
 
         interfaces.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecciona una interfaz" }));
         interfaces.addActionListener(new java.awt.event.ActionListener() {
@@ -198,6 +218,67 @@ public class Main extends javax.swing.JFrame implements MouseListener,Runnable {
             }
         
     }//GEN-LAST:event_alvueloActionPerformed
+
+    private void exportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportarActionPerformed
+        JFileChooser f = new JFileChooser();
+            f.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY); 
+            f.showSaveDialog(null);
+
+            System.out.println(f.getCurrentDirectory());
+            System.out.println(f.getSelectedFile());
+            String path= f.getSelectedFile().toString();
+            File file =new File(path + "\\export.txt");
+            List ether = new ArrayList();
+            try {
+
+                 FileWriter fw = new FileWriter(file);
+                 BufferedWriter bw = new BufferedWriter(fw);
+                 for(int i = 0; i < jt.getRowCount(); i++){
+                     for(int j=0; j < jt.getColumnCount(); j++){
+                        bw.write(jt.getValueAt(i,j).toString()+" ");
+                        if (j== 4){
+                            ether.add(jt.getValueAt(i,j).toString());
+                            
+                        }
+                     }
+                     bw.newLine();
+                 }
+                 
+                 bw.close();
+                 fw.close();
+            } catch (IOException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_exportarActionPerformed
+
+    private void estadisticasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_estadisticasActionPerformed
+        StringBuilder textInfo = new StringBuilder();
+            int eth=0;
+            List ether = new ArrayList();
+            for(int i = 0; i < jt.getRowCount(); i++){
+                for(int j=0; j < jt.getColumnCount(); j++){
+                    if (j== 4){
+                        textInfo.append(jt.getValueAt(i,j).toString()+" ");
+                    }
+                }
+            }
+            String[] s2 = textInfo.toString().split(" ");
+            for(int i=0; i<=s2.length-1; i++){
+                if("2048".equals(s2[i])){
+                    eth++;
+                }
+            }
+            System.out.print(eth);
+            DefaultPieDataset pieData = new DefaultPieDataset();
+            pieData.setValue("Ethernet", new Integer(eth));
+            pieData.setValue("IEEEE", new Integer(30));
+            pieData.setValue("ARP", new Integer(20));
+            JFreeChart chart = ChartFactory.createPieChart("Tramas", pieData, true,true,true);
+           PiePlot P = (PiePlot)chart.getPlot();
+           ChartFrame frame =new ChartFrame("Tramas", chart);
+           frame.setVisible(true);
+           frame.setSize(450,500);
+    }//GEN-LAST:event_estadisticasActionPerformed
 
     /**
      * @param args the command line arguments
