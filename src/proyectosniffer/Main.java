@@ -220,16 +220,17 @@ public class Main extends javax.swing.JFrame implements MouseListener,Runnable {
     }//GEN-LAST:event_alvueloActionPerformed
 
     private void exportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportarActionPerformed
-        JFileChooser f = new JFileChooser();
+
+            try {
+                JFileChooser f = new JFileChooser();
             f.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY); 
             f.showSaveDialog(null);
 
-            System.out.println(f.getCurrentDirectory());
+            //System.out.println(f.getCurrentDirectory());
             System.out.println(f.getSelectedFile());
             String path= f.getSelectedFile().toString();
             File file =new File(path + "\\export.txt");
             List ether = new ArrayList();
-            try {
 
                  FileWriter fw = new FileWriter(file);
                  BufferedWriter bw = new BufferedWriter(fw);
@@ -254,6 +255,13 @@ public class Main extends javax.swing.JFrame implements MouseListener,Runnable {
     private void estadisticasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_estadisticasActionPerformed
         StringBuilder textInfo = new StringBuilder();
             int eth=0;
+            int arp=0;
+            int igmp=0;
+            int icmp= 0;
+            int tcp =0;
+            int udp = 0;
+            int ieee=0;
+            Boolean flag=true;
             List ether = new ArrayList();
             for(int i = 0; i < jt.getRowCount(); i++){
                 for(int j=0; j < jt.getColumnCount(); j++){
@@ -266,13 +274,43 @@ public class Main extends javax.swing.JFrame implements MouseListener,Runnable {
             for(int i=0; i<=s2.length-1; i++){
                 if("2048".equals(s2[i])){
                     eth++;
+                    flag=true;
                 }
+                if("2054".equals(s2[i])){
+                    arp++;
+                    flag=true;
+                }
+                if("1".equals(s2[i])){
+                    icmp++;
+                    flag=true;
+                    
+                }
+                if("2".equals(s2[i])){
+                    igmp++;
+                    flag=true;
+                }
+                
+                if("6".equals(s2[i])){
+                    tcp++;
+                    flag=true;
+                }
+                if("17".equals(s2[i])){
+                    udp++;
+                    flag=true;
+                }
+                if(Integer.parseInt(s2[i])< 1500){
+                ieee++;
+            }
             }
             System.out.print(eth);
             DefaultPieDataset pieData = new DefaultPieDataset();
-            pieData.setValue("Ethernet", new Integer(eth));
-            pieData.setValue("IEEEE", new Integer(30));
-            pieData.setValue("ARP", new Integer(20));
+            pieData.setValue("Ipv4", new Integer(eth));
+            pieData.setValue("ARP", new Integer(arp));
+            pieData.setValue("ICMP", new Integer(icmp));
+            pieData.setValue("IGMP", new Integer(igmp));
+            pieData.setValue("TCP", new Integer(tcp));
+            pieData.setValue("UDP", new Integer(udp));
+            pieData.setValue("IEEE", new Integer(ieee));
             JFreeChart chart = ChartFactory.createPieChart("Tramas", pieData, true,true,true);
            PiePlot P = (PiePlot)chart.getPlot();
            ChartFrame frame =new ChartFrame("Tramas", chart);
