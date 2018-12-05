@@ -17,12 +17,14 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartFrame;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.data.general.DefaultPieDataset;
+import org.jnetpcap.Pcap;
 
 public class Main extends javax.swing.JFrame implements MouseListener,Runnable {
 
@@ -75,6 +77,11 @@ public class Main extends javax.swing.JFrame implements MouseListener,Runnable {
         });
 
         importar.setText("Importar");
+        importar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                importarActionPerformed(evt);
+            }
+        });
 
         exportar.setText("Exportar");
         exportar.addActionListener(new java.awt.event.ActionListener() {
@@ -315,6 +322,31 @@ public class Main extends javax.swing.JFrame implements MouseListener,Runnable {
            frame.setVisible(true);
            frame.setSize(450,500);
     }//GEN-LAST:event_estadisticasActionPerformed
+
+    private void importarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importarActionPerformed
+
+        String archivo = null;
+        //abrir archivo
+        JFileChooser fileopen = new JFileChooser("");
+        FileNameExtensionFilter filtroPcap = new FileNameExtensionFilter("*.PCAP", "pcap", ".pcap");
+        fileopen.setFileFilter(filtroPcap);
+        fileopen.showOpenDialog(this);
+        try{
+            archivo = fileopen.getSelectedFile().getAbsolutePath();
+        }catch(Exception e){
+            System.err.println(e);
+            return;
+        }
+        ArrayList<Trama> tramasoffline = helper.importarArchivo(archivo);
+        for(Trama t:tramasoffline){
+            DefaultTableModel model = (DefaultTableModel) jt.getModel();
+            Format formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String fecha =  formatter.format(t.getDate());
+            model.addRow(new Object[]{t.hash, fecha,t.getMacO(),t.getMacD(),t.tipo+""});
+            tramas.add(t);
+        }
+        System.out.println(archivo);
+    }//GEN-LAST:event_importarActionPerformed
 
     /**
      * @param args the command line arguments

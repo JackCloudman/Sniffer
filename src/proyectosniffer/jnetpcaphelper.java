@@ -66,6 +66,41 @@ public class jnetpcaphelper{
 		}
     return listaInterfaces;
     }
+    public  ArrayList<Trama> importarArchivo(String path) {
+        ArrayList<Trama> tramas = new ArrayList<Trama>();
+        errbuf = new StringBuilder(); // For any error msgs 
+        pcap = Pcap.openOffline(path, errbuf);
+        packetsOffline = new PcapPacketArrayList();
+        PcapPacketHandler<PcapPacketArrayList> jpacketHandler = (PcapPacket packet, PcapPacketArrayList PaketsList) -> {
+            PaketsList.add(packet);
+        };
+        try {
+            pcap.loop(-1, jpacketHandler, packetsOffline);
+            //return packets;
+        } finally {
+            pcap.close();
+        }
+        for (PcapPacket packet:packetsOffline) {
+            Trama t;
+            int tipo = (packet.getUByte(12) * 256) + (packet.getUByte(13));
+            if(tipo<1500){
+                t = new IEEEv2(packet);
+            }
+            else{
+                Ethernet eth = new Ethernet();
+                if(packet.hasHeader(eth)&&(tipo==2048||tipo==2054)){
+                    t = new ETHERNET(packet);
+                }else{
+                t = null;
+                }
+            }
+            if(t!=null){
+                tramas.add(t);
+            }
+        }
+        
+    return tramas;
+}
     public Trama scan(int index){
         device = alldevs.get(index);
         pcap = Pcap.openLive(device.getName(), snaplen, flags, timeout, errbuf);

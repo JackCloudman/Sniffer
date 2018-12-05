@@ -103,16 +103,25 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Importar"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="importarActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="exportar">
       <Properties>
         <Property name="text" type="java.lang.String" value="Exportar"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="exportarActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="estadisticas">
       <Properties>
         <Property name="text" type="java.lang.String" value="Estadisticas"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="estadisticasActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JComboBox" name="interfaces">
       <Properties>
